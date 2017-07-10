@@ -39,12 +39,12 @@ The goals / steps of this project are the following:
 [video1]: ./project_video.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+### Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
 You're reading it!
 
@@ -80,15 +80,15 @@ Using RGB and one channel yielded a 93.9% accuracy on the test set. YCrCb color 
 
 
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I tried both color and HOG classification independently to experiment on the performance based on this features. Color classification on its own achieved  an accuracy of 93.8%. HOG classified achieved an accuracy of 98.7% . I then experimented combining color and HOG features to test that additional features would indeed increase the performance.
 
 Based on testing different color spaces and channels I decided to use YCrCb color space and 3-channel HOG features. I applied spatial binning and histograms of color to obtain more features. The result was a feature vector with all three sets of features concatenated that can be fed to a Linear SVC. The final accuracy on the test set was 99.4%. To compare the performance and impact of using a different color space, I trained the model using RGB color space and achieved an accuracy of 97.9%, which suggest that the final combination of color space and channels was a better alternative.
 
-###Sliding Window Search
+### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I tried using the sliding window method but ended up using the HOG subsampling method as it applies HOG function to the whole image reducing latency. The method `find_cars` applies the HOG function to the entire image and then subsamples multiple windows based on a specified start and stop position, and a scale. For each window, a feature vector is created that includes the HOG features for three channels and also features form spatial binning and histograms of color.
 
@@ -98,7 +98,7 @@ The feature vector for each of the sampled regions can then be scaled and fed in
 
 
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 To optimize the performance of the classifier, the combined feature vector was used to train the classifier as it yielded the best accuracy. As detailed in the previous section, the combination of HOG features, histograms of color, and spatial binning produced true detections and a small number of false positives. Hard negative mining might improve the performance but I did not use it for the final implementation.
 
@@ -132,7 +132,7 @@ Here's a [link to my video result](./project_video.mp4)
 ![gif][image22]
 
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 In the final pipeline, additional window scales are used to increase the detection performance and be able to recognize vehicles with different scales.I stored detections for 10 consecutive frames and then applied a threshold to the resulting heatmap. The reason behind this is that over several frames positive detections will get 'hotter' and when the threshold is applied, only 'cold' pixels will be removed. This assumes that over several frames there will not be an increasing number of false positives at the same location.
 
@@ -158,9 +158,9 @@ The thresholded heatmap can then be used to detect different vehicles on the fra
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 The final implementation work reasonably well at detecting vehicles on the video. One of the challenges I encountered was eliminating all false positives while adding different scales to detect vehicles at different distances. In other words, when decreasing the scale of the detection windows, there where an increased number of false positives but when filtering them vehicles further in the horizon would appear as not detected. With further experimentation, these parameters can be better optimized to achieve a more robust pipeline.
 
